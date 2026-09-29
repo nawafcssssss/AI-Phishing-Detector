@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>كاشف التصيد الاحتيالي بالذكاء الاصطناعي</title>
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', Arial, sans-serif;
+      background: linear-gradient(135deg, #0b1220, #111c33);
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 45px 20px 35px;
+      background: rgba(37, 99, 235, 0.10);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    header h1 {
+      font-size: 2.2em;
+      margin: 0 0 12px;
+      color: #ffffff;
+    }
+
+    header p {
+      font-size: 1.05em;
+      color: #93c5fd;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 750px;
+      margin: 45px auto;
+      background: #111827;
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    input[type="url"] {
+      flex: 1;
+      padding: 15px;
+      border: 1px solid #263449;
+      border-radius: 10px;
+      font-size: 1em;
+      background: #1f2937;
+      color: #ffffff;
+      outline: none;
+      direction: ltr;
+    }
+
+    input[type="url"]:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    input::placeholder {
+      color: #8b96a8;
+    }
+
+    button {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.25s;
+      font-size: 1em;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+      transform: translateY(-1px);
+    }
+
+    .results {
+      margin-top: 30px;
+      background: #1a2537;
+      border-radius: 15px;
+      padding: 25px;
+      display: none;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .result-title {
+      font-size: 1.1em;
+      color: #cbd5e1;
+      margin-bottom: 10px;
+    }
+
+    .score {
+      text-align: center;
+      font-size: 42px;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+
+    .progress {
+      width: 100%;
+      height: 14px;
+      background: #273449;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.6s ease;
+    }
+
+    .result-message {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 1.05em;
+      line-height: 1.8;
+    }
+
+    .about {
+      margin-top: 25px;
+      padding: 22px;
+      background: #0f172a;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .about h2 {
+      margin-top: 0;
+      color: #93c5fd;
+      font-size: 1.25em;
+    }
+
+    .about p {
+      color: #aeb8c8;
+      line-height: 1.9;
+      margin-bottom: 0;
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 25px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .legend span {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .green {
+      background: #22c55e;
+    }
+
+    .yellow {
+      background: #eab308;
+    }
+
+    .red {
+      background: #ef4444;
+    }
+
+    .note {
+      text-align: center;
+      color: #7f8ca3;
+      font-size: 13px;
+      margin-top: 20px;
+      line-height: 1.7;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      font-size: 0.9em;
+      color: #64748b;
+    }
+
+    @media (max-width: 600px) {
+
+      .container {
+        margin: 25px 15px;
+        padding: 22px;
+      }
+
+      header h1 {
+        font-size: 1.7em;
+      }
+
+      form {
+        flex-direction: column;
+      }
+
+      input[type="url"],
+      button {
+        width: 100%;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <header>
+
+    <h1>🛡️ كاشف التصيد الاحتيالي بالذكاء الاصطناعي</h1>
+
+    <p>
+      حماية الإنترنت .. برؤية سعودية 🇸🇦
+    </p>
+
+  </header>
+
+
+  <div class="container">
+
+    <form id="scanForm">
+
+      <input
+        type="url"
+        id="urlInput"
+        placeholder="أدخل الرابط هنا لفحص أمانه"
+        required
+      >
+
+      <button type="submit">
+        🔍 فحص الرابط
+      </button>
+
+    </form>
+
+
+    <div class="legend">
+
+      <span>
+        <i class="dot green"></i>
+        منخفض 0–39%
+      </span>
+
+      <span>
+        <i class="dot yellow"></i>
+        متوسط 40–69%
+      </span>
+
+      <span>
+        <i class="dot red"></i>
+        مرتفع 70–100%
+      </span>
+
+    </div>
+
+
+    <div class="results" id="results">
+
+      <div class="result-title">
+        نتيجة التحليل
+      </div>
+
+      <div class="score" id="score">
+        0%
+      </div>
+
+      <div class="progress">
+
+        <div
+          class="progress-bar"
+          id="progressBar">
+        </div>
+
+      </div>
+
+      <div
+        class="result-message"
+        id="resultMessage">
+      </div>
+
+    </div>
+
+
+    <div class="about">
+
+      <h2>عن الموقع</h2>
+
+      <p>
+        كاشف التصيد الاحتيالي بالذكاء الاصطناعي هو أداة تساعد
+        على تحليل عناوين الروابط واكتشاف المؤشرات التي قد تدل
+        على محاولات التصيد الاحتيالي، باستخدام تقنيات تعلم الآلة
+        وتحليل خصائص الرابط.
+      </p>
+
+    </div>
+
+
+    <div class="note">
+
+      ⚠️ درجة الخطر هي تقدير ناتج عن نموذج تعلم آلي وتحليل
+      خصائص الرابط، ولا تمثل ضمانًا بأن الرابط آمن أو ضار.
+
+    </div>
+
+  </div>
+
+
+  <footer>
+
+    جميع الحقوق محفوظة © 2026 - كاشف التصيد الاحتيالي
+
+  </footer>
+
+
+  <script>
+
+    const form = document.getElementById("scanForm");
+
+    form.addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+      const url = document.getElementById("urlInput").value.trim();
+
+      const results = document.getElementById("results");
+      const score = document.getElementById("score");
+      const progressBar = document.getElementById("progressBar");
+      const resultMessage = document.getElementById("resultMessage");
+
+      if (!url) {
+        return;
+      }
+
+      results.style.display = "block";
+
+      score.textContent = "...";
+      resultMessage.textContent = "جاري تحليل الرابط...";
+      progressBar.style.width = "0%";
+
+
+      try {
+
+        const response = await fetch("/analyze", {
+
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            url: url
+          })
+
+        });
+
+
+        const data = await response.json();
+
+        const risk = data.risk_score;
+
+        score.textContent = risk + "%";
+
+        progressBar.style.width = risk + "%";
+
+        resultMessage.textContent = data.result;
+
+
+        if (risk >= 70) {
+
+          progressBar.style.background = "#ef4444";
+          score.style.color = "#ef4444";
+
+        }
+
+        else if (risk >= 40) {
+
+          progressBar.style.background = "#eab308";
+          score.style.color = "#eab308";
+
+        }
+
+        else {
+
+          progressBar.style.background = "#22c55e";
+          score.style.color = "#22c55e";
+
+        }
+
+      }
+
+      catch (error) {
+
+        score.textContent = "خطأ";
+
+        score.style.color = "#ef4444";
+
+        resultMessage.textContent =
+          "حدث خطأ أثناء الاتصال بالخادم.";
+
+        progressBar.style.width = "0%";
+
+      }
+
+    });
+
+  </script>
+
+</body>
+
+</html>

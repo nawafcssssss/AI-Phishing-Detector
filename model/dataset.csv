@@ -1,0 +1,15 @@
+url,label
+https://google.com,0
+https://github.com,0
+https://microsoft.com,0
+https://apple.com,0
+https://amazon.com,0
+https://example.com,0
+https://university.example,0
+http://fake-login.example,1
+http://verify-account.example,1
+http://secure-login.example,1
+http://account-check.example,1
+http://192.168.1.5/login,1
+http://login-confirm.example,1
+http://password-verify.example,1
